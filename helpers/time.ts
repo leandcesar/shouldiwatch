@@ -39,6 +39,12 @@ export default class Time {
     return new Date(timeZoneDate)
   }
 
+  formatMonthDay(): string {
+    const month = String(this.getDate().getMonth() + 1).padStart(2, "0");
+    const day = String(this.getDate().getDate()).padStart(2, "0");
+    return `${month}-${day}`;
+  }
+
   /**
    * Check if a timezone exist
    * @param {string} timeZone
@@ -79,14 +85,6 @@ export default class Time {
   }
 
   /**
-   * Today is Thursday
-   * @return boolean
-   */
-  isThursday(): boolean {
-    return this.getDate().getDay() === 4
-  }
-
-  /**
    * Today is Friday
    * @return boolean
    */
@@ -103,43 +101,11 @@ export default class Time {
   }
 
   /**
-   * Are we in the afternoon?
-   * @return boolean
-   */
-  isAfternoon(): boolean {
-    return this.getDate().getHours() >= 16
-  }
-
-  /**
-   * Are we Thursday afternoon?
-   * @return boolean
-   */
-  isThursdayAfternoon(): boolean {
-    return this.isThursday() && this.isAfternoon()
-  }
-
-  /**
-   * Are we Friday afternoon?
-   * @return boolean
-   */
-  isFridayAfternoon(): boolean {
-    return this.isFriday() && this.isAfternoon()
-  }
-
-  /**
    * Are we Friday the 13th?
    * @return boolean
    */
   isFriday13th(): boolean {
     return this.isFriday() && this.is13th()
-  }
-
-  /**
-   * Are we the weekend (Saturday, Sunday)
-   * @return boolean
-   */
-  isWeekend(): boolean {
-    return this.getDate().getDay() === 6 || this.getDate().getDay() === 0
   }
 
   /**

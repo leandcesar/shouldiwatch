@@ -1,15 +1,11 @@
 import en from '../locales/en.json'
-import es from '../locales/es.json'
-import esAR from '../locales/es-AR.json'
-import pt from '../locales/pt.json'
+// import pt from '../locales/pt.json'
 
 type LocaleData = typeof en
 
 const locales: Record<string, LocaleData> = {
   en,
-  es,
-  'es-AR': esAR,
-  pt
+  // pt
 }
 
 /**
@@ -36,7 +32,7 @@ function getLocaleData(lang: string): LocaleData {
 
 /**
  * Server-side translation function
- * @param key - dot-notation key like 'reasons.to_deploy'
+ * @param key - dot-notation key
  * @param lang - language code (defaults to 'en'). Supports regional codes like 'es-AR'
  * @returns translated value or falls back to base language or English
  */

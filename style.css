@@ -56,10 +56,32 @@ a:focus {
 }
 .wrapper {
   min-height: 100vh;
-
   display: grid;
   grid-template-rows: 1fr auto;
   justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--bg);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  transform: scale(1.05);
+  z-index: -2;
+  filter: blur(8px);
+}
+
+.wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
 }
 
 .aligner {
@@ -81,12 +103,20 @@ a:focus {
   padding: 14px 0 13px 0;
 }
 
-#text {
+#title {
   font: 900 6rem/6rem -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
     Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
   color: #111;
   text-transform: uppercase;
   hyphens: auto;
+}
+
+#subtitle {
+  font: 300 3rem/3rem -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  color: #111;
+  hyphens: auto;
+  margin-top: 1.5rem;
 }
 
 .meta {
@@ -105,7 +135,7 @@ a:focus {
   border: 0;
   background: transparent;
   text-decoration: none;
-  color: #a3a3a3;
+  color: #d3d3d3;
   margin-top: 4rem;
   outline: none;
   cursor: pointer;
@@ -149,8 +179,12 @@ ul.footer-list select {
     font: 300 3rem/2.8rem SFMono-Regular, Menlo, Monaco, Consolas,
       'Liberation Mono', 'Courier New', monospace;
   }
-  #text {
+  #title {
     font: 900 9rem/8.5rem -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+      Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  }
+  #subtitle {
+    font: 300 3rem/3rem -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
       Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
   }
 }
@@ -167,42 +201,27 @@ ul.footer-list select {
   }
 }
 
-.its-friday {
-  background-color: #ff4136;
-}
-
-.its-friday .tagline {
-  color: #fff;
-}
-
-.its-friday #text {
-  color: #fff;
-}
-
-.its-friday .footer-list li {
-  color: #ff9089;
-}
-
-.its-friday #reload,
-.its-friday .footer-list a {
-  color: #b30a00;
-}
-
-.its-friday .space-btn,
-.its-friday span {
-  border-color: #b30a00;
-  color: #b30a00;
-}
-
-.reason {
+.choice {
   white-space: pre-line;
   word-break: break-word;
   padding: 0 4rem;
 }
 
 @media screen and (max-width: 400px) {
-  .reason {
+  .choice {
     padding: 0 2rem;
+  }
+}
+
+.reason {
+  white-space: pre-line;
+  word-break: break-word;
+  padding: 0 2rem;
+}
+
+@media screen and (max-width: 200px) {
+  .reason {
+    padding: 0 1rem;
   }
 }
 
@@ -210,7 +229,8 @@ ul.footer-list select {
 /* Transitions for smooth theme switching */
 body,
 .wrapper,
-#text,
+#title,
+#subtitle,
 .tagline,
 #reload,
 .space-btn,
@@ -225,21 +245,25 @@ ul.footer-list a {
   color: #000;
 }
 
-[data-theme='Light'] #text {
+[data-theme='Light'] #title {
+  color: #111;
+}
+
+[data-theme='Light'] #subtitle {
   color: #111;
 }
 
 [data-theme='Light'] .tagline {
-  color: #999;
+  color: #111;
 }
 
 [data-theme='Light'] #reload {
-  color: #a3a3a3;
+  color: #111;
 }
 
 [data-theme='Light'] .space-btn {
-  border-color: #a3a3a3;
-  color: #000;
+  border-color: #000;
+  color: #111;
 }
 
 [data-theme='Light'] ul.footer-list li {
@@ -256,32 +280,8 @@ ul.footer-list a {
   color: #000;
 }
 
-/* Light Theme - Friday State */
-[data-theme='Light'] .its-friday {
-  background-color: #ff4136;
-}
-
-[data-theme='Light'] .its-friday .tagline {
-  color: #fff;
-}
-
-[data-theme='Light'] .its-friday #text {
-  color: #fff;
-}
-
-[data-theme='Light'] .its-friday .footer-list li {
-  color: #ff9089;
-}
-
-[data-theme='Light'] .its-friday #reload,
-[data-theme='Light'] .its-friday .footer-list a {
-  color: #b30a00;
-}
-
-[data-theme='Light'] .its-friday .space-btn,
-[data-theme='Light'] .its-friday span {
-  border-color: #b30a00;
-  color: #b30a00;
+[data-theme='Light'] .wrapper::after {
+  background: rgba(255, 255, 255, 0.65);
 }
 
 /* Dark Theme */
@@ -290,7 +290,11 @@ ul.footer-list a {
   color: #e0e0e0;
 }
 
-[data-theme='Dark'] #text {
+[data-theme='Dark'] #title {
+  color: #ffffff;
+}
+
+[data-theme='Dark'] #subtitle {
   color: #ffffff;
 }
 
@@ -299,11 +303,11 @@ ul.footer-list a {
 }
 
 [data-theme='Dark'] #reload {
-  color: #808080;
+  color: #d3d3d3;
 }
 
 [data-theme='Dark'] .space-btn {
-  border-color: #808080;
+  border-color: #d3d3d3;
   color: #e0e0e0;
 }
 
@@ -321,28 +325,8 @@ ul.footer-list a {
   color: #ffffff;
 }
 
-/* Dark Theme - Friday State */
-[data-theme='Dark'] .its-friday {
-  background: linear-gradient(135deg, #4a0000 0%, #2b0000 100%);
-}
-
-[data-theme='Dark'] .its-friday .tagline {
-  color: #ffdad9;
-}
-
-[data-theme='Dark'] .its-friday .footer-list li {
-  color: #ffb4b0;
-}
-
-[data-theme='Dark'] .its-friday #reload,
-[data-theme='Dark'] .its-friday .footer-list a {
-  color: #ff8985;
-}
-
-[data-theme='Dark'] .its-friday .space-btn,
-[data-theme='Dark'] .its-friday span {
-  border-color: #ff8985;
-  color: #ff8985;
+[data-theme='Dark'] .wrapper::after {
+  background: rgba(0, 0, 0, 0.65);
 }
 
 .theme-toggle {

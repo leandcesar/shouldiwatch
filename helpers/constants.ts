@@ -6,67 +6,35 @@ export function getBaseUrl() {
   if (typeof window !== 'undefined') return ''
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`
   if (process.env.NODE_ENV === 'production')
-    return 'https://shouldideploy.today'
+    return 'https://onthisday.watch'
   return `http://localhost:${process.env.PORT ?? 3001}`
 }
 
-export const shouldIDeploy = function (time: Time | null, date?: Date) {
-  if (!time) {
-    return false
-  }
-
-  const currentDate = time.getDate()
-
-  if (date && currentDate.toDateString() !== date.toDateString()) {
-    return false
-  }
-
-  return (
-    !time.isFriday() &&
-    !time.isWeekend() &&
-    !time.isHolidays() &&
-    !time.isAfternoon()
-  )
-}
-
-export const shouldIDeployColorTheme = function (
-  time: Time | null,
+export const colorTheme = function (
   theme?: string
 ) {
   const isDark = theme === Theme.Dark
-  const canDeploy = shouldIDeploy(time)
-
   if (isDark) {
-    return canDeploy
-      ? '#121212'
-      : 'linear-gradient(135deg, #4a0000 0%, #2b0000 100%)'
+    return '#121212'
   }
-
-  return canDeploy ? '#fff' : '#ff4136'
+  return '#fff'
 }
 
-export const shouldIDeployFontTheme = function (
-  time: Time | null,
+export const fontTheme = function (
   theme?: string
 ) {
   const isDark = theme === Theme.Dark
-  const canDeploy = shouldIDeploy(time)
-
   if (isDark) {
-    return canDeploy ? '#fff' : '#ffdad9'
+    return '#fff'
   }
-
-  return canDeploy ? '#111' : '#fff'
+  return '#111'
 }
 
-export const shouldIDeployFavIcon = function (time: Time | null) {
-  return shouldIDeploy(time)
-    ? `${getBaseUrl()}/dots.png`
-    : `${getBaseUrl()}/dots-red.png`
-}
-
-export const getRandom = function ranDay(list: string | string[]) {
-  return list[Math.floor(Math.random() * list.length)]
+export const getRandom = <T,>(list: T[]): T => {
+  const array = new Uint32Array(1)
+  crypto.getRandomValues(array)
+  const index = array[0] % list.length
+  return list[index]
 }
 
 /**
@@ -95,26 +63,6 @@ export function dayHelper(time: Time, lang?: string): string[] {
 
   if (time.isFriday13th()) {
     return getTranslatedReasons('friday_13th', language)
-  }
-
-  if (time.isFridayAfternoon()) {
-    return getTranslatedReasons('friday_afternoon', language)
-  }
-
-  if (time.isFriday()) {
-    return getTranslatedReasons('to_not_deploy', language)
-  }
-
-  if (time.isThursdayAfternoon()) {
-    return getTranslatedReasons('thursday_afternoon', language)
-  }
-
-  if (time.isWeekend()) {
-    return getTranslatedReasons('weekend', language)
-  }
-
-  if (time.isAfternoon()) {
-    return getTranslatedReasons('afternoon', language)
   }
 
   return getTranslatedReasons('to_deploy', language)

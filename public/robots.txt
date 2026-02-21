@@ -2,5 +2,3 @@ User-agent: *
 Allow: /
 Crawl-delay: 1
 User-agent: *
-Disallow: /api/og$
-Allow: /api$

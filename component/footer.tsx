@@ -18,7 +18,7 @@ const Footer = (props: IFooter) => {
         <li>
           {t("footer.share")}{" "}
           <a
-            href="https://x.com/intent/tweet?source=http%3A%2F%2Fshouldideploy.today%2F&text=Should%20I%20Deploy%20Today%3F:%20http%3A%2F%2Fshouldideploy.today"
+            href="https://x.com/intent/tweet?source=https%3A%2F%2Fonthisday.watch%2F&text=What%20should%20I%20watch%20today%3F:%20https%3A%2F%2Fonthisday.watch"
             target="_blank"
             rel="noopener noreferrer"
             title="Xed? Share on X"
@@ -29,7 +29,7 @@ const Footer = (props: IFooter) => {
         <li>
           {t("footer.source")}{" "}
           <a
-            href="http://github.com/baires/shouldideploy"
+            href="http://github.com/leandcesar/onthisday.watch"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -50,19 +50,11 @@ const Footer = (props: IFooter) => {
             {props.theme}
           </button>
         </li>
-        <li>
+        {/* <li>
           {t("footer.language")}{" "}
           <select
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
-            style={{
-              background: "transparent",
-              border: "none",
-              color: "inherit",
-              fontFamily: "inherit",
-              fontSize: "inherit",
-              cursor: "pointer",
-            }}
           >
             {availableLanguages.map((lang) => (
               <option key={lang} value={lang}>
@@ -70,25 +62,7 @@ const Footer = (props: IFooter) => {
               </option>
             ))}
           </select>
-        </li>
-      </ul>
-      <ul className="footer-list">
-        <li>
-          <a
-            href={`/api?tz=${encodeURIComponent(props.timezone)}&lang=${encodeURIComponent(language)}`}
-            target="_blank"
-          >
-            {t("footer.api")}
-          </a>
-        </li>
-        <li>
-          <a
-            href={`/api/slack?tz=${encodeURIComponent(props.timezone)}&lang=${encodeURIComponent(language)}`}
-            target="_blank"
-          >
-            {t("footer.slack_api")}
-          </a>
-        </li>
+        </li> */}
       </ul>
     </>
   );

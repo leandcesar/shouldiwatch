@@ -1,4 +1,3 @@
-import React from 'react'
 import type { AppProps } from 'next/app'
 import '../style.css'
 import { LanguageProvider } from '../helpers/i18n'

@@ -1,7 +1,6 @@
 // index.tsx
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
-import { shouldIDeploy, getBaseUrl } from '../helpers/constants'
 import Time from '../helpers/time'
 import Widget from '../component/widget'
 import { useTranslation } from '../helpers/i18n'
@@ -12,11 +11,13 @@ import { Theme, ThemeType } from '../helpers/themes'
 interface IPage {
   tz: string
   now: { timezone: string; customDate: string }
+  initialChoice: string
   initialReason: string
 }
 
-const Page: React.FC<IPage> = ({ tz, now: initialNow, initialReason }) => {
+const Page: React.FC<IPage> = ({ tz, now: initialNow, initialChoice, initialReason }) => {
   const [timezone, setTimezone] = useState<string>(tz)
+  const [backgroundUrl, setBackgroundUrl] = useState<string>()
   const [now, setNow] = useState<any>(
     new Time(initialNow.timezone, initialNow.customDate)
   )
@@ -69,11 +70,17 @@ const Page: React.FC<IPage> = ({ tz, now: initialNow, initialReason }) => {
       <Head>
         <title>{t('meta.title')}</title>
         <meta name="description" content={t('meta.description')} />
-        <link rel="icon" href="/api/favicon" />
-        <meta property="og:image" content={`${getBaseUrl()}/api/og`} />
       </Head>
-      <div className={`wrapper ${!shouldIDeploy(now) && 'its-friday'}`}>
-        <Widget reason={initialReason} now={now} />
+      <div
+        className={`wrapper`}
+        style={{ "--bg": `url(${backgroundUrl})` } as React.CSSProperties}
+      >
+        <Widget
+          choice={initialChoice}
+          reason={initialReason}
+          now={now}
+          onChoiceSelected={setBackgroundUrl}
+        />
         <div className="meta">
           <Footer
             timezone={timezone}
