@@ -154,6 +154,8 @@ ul.footer-list {
   padding: 0;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 ul.footer-list:first-of-type {
   margin-bottom: 1.5rem;
@@ -172,6 +174,19 @@ ul.footer-list a {
 
 ul.footer-list select {
   max-width: 110px;
+}
+
+.filter-options {
+  display: inline-flex;
+  gap: 0.8rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
 }
 
 @media (min-width: 800px) {

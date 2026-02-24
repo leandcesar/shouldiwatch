@@ -7,18 +7,10 @@ interface ITimezone {
 }
 
 const Timezone = (props: ITimezone) => {
-  /**
-   * On change timezone propagate new timezone value
-   * @return void
-   */
   const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     props.onChange(event.target.value)
   }
 
-  /**
-   * Build options list
-   * @return JSX.Element[]
-   */
   const options = () => {
     return names.map((name, index) => {
       return (
@@ -29,10 +21,6 @@ const Timezone = (props: ITimezone) => {
     })
   }
 
-  /**
-   * Render timezone selector
-   * @return JSX.Element[]
-   */
   return (
     <select value={props.timezone} onChange={onChange}>
       {options()}

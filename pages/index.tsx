@@ -5,6 +5,7 @@ import Time from '../helpers/time'
 import Widget from '../component/widget'
 import { useTranslation } from '../helpers/i18n'
 import Footer from '../component/footer'
+import { ContentTypeFilter } from '../component/filter'
 import Router from 'next/router'
 import { Theme, ThemeType } from '../helpers/themes'
 
@@ -15,6 +16,16 @@ interface IPage {
   initialReason: string
 }
 
+type FilterType = 'movie' | 'tv' | 'person'
+type ContentFilters = Record<FilterType, boolean>
+
+const FILTER_PRESET_MAP: Record<ContentTypeFilter, ContentFilters> = {
+  all: { movie: true, tv: true, person: true },
+  only_movies: { movie: true, tv: false, person: false },
+  only_tv: { movie: false, tv: true, person: false },
+  only_people: { movie: false, tv: false, person: true },
+}
+
 const Page: React.FC<IPage> = ({ tz, now: initialNow, initialChoice, initialReason }) => {
   const [timezone, setTimezone] = useState<string>(tz)
   const [backgroundUrl, setBackgroundUrl] = useState<string>()
@@ -22,6 +33,12 @@ const Page: React.FC<IPage> = ({ tz, now: initialNow, initialChoice, initialReas
     new Time(initialNow.timezone, initialNow.customDate)
   )
   const [theme, setTheme] = useState<ThemeType>(Theme.Light)
+  const [filters, setFilters] = useState<ContentFilters>({
+    movie: true,
+    tv: true,
+    person: true
+  })
+  const [filterPreset, setFilterPreset] = useState<ContentTypeFilter>('all')
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as ThemeType | null
@@ -63,6 +80,11 @@ const Page: React.FC<IPage> = ({ tz, now: initialNow, initialChoice, initialReas
     setNow(new Time(newTimezone))
   }
 
+  const changeFilterPreset = (preset: ContentTypeFilter) => {
+    setFilterPreset(preset)
+    setFilters(FILTER_PRESET_MAP[preset])
+  }
+
   const { t } = useTranslation()
 
   return (
@@ -79,6 +101,7 @@ const Page: React.FC<IPage> = ({ tz, now: initialNow, initialChoice, initialReas
           choice={initialChoice}
           reason={initialReason}
           now={now}
+          filters={filters}
           onChoiceSelected={setBackgroundUrl}
         />
         <div className="meta">
@@ -87,6 +110,8 @@ const Page: React.FC<IPage> = ({ tz, now: initialNow, initialChoice, initialReas
             changeTimezone={changeTimezone}
             theme={theme}
             toggleTheme={toggleTheme}
+            filterPreset={filterPreset}
+            changeFilterPreset={changeFilterPreset}
           />
         </div>
       </div>

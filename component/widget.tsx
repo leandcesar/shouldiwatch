@@ -3,10 +3,27 @@ import { getRandom } from '../helpers/constants'
 import Time from '../helpers/time'
 import { useTranslation } from '../helpers/i18n'
 
+type FilterType = 'movie' | 'tv' | 'person'
+type ChoiceType = FilterType
+
+interface Choice {
+  type: ChoiceType
+  name: string
+  reason: string
+  image_path: string | null
+  date: string
+  release_date?: string
+  first_air_date?: string
+  last_air_date?: string
+  birthday?: string
+  deathday?: string
+}
+
 interface IWidget {
   now: Time
   choice: string
   reason: string
+  filters: Record<FilterType, boolean>
   onChoiceSelected?: (imageUrl: string) => void
 }
 
@@ -66,18 +83,17 @@ const Widget = (props: IWidget) => {
    */
   const updateReasons = React.useCallback(() => {
     const choices = getChoices()
-    const choice = getRandom(choices) as {
-      type: string
-      name: string
-      reason: string
-      image_path: string
-      date: string
-      release_date?: string
-      first_air_date?: string
-      last_air_date?: string
-      birthday?: string
-      deathday?: string
+    const allChoices = Array.isArray(choices) ? (choices as Choice[]) : []
+    const filteredChoices = allChoices.filter((item) => props.filters[item.type])
+
+    if (filteredChoices.length === 0) {
+      setChoices(t('widget.no_results_title'))
+      setReasons(t('widget.no_results_reason'))
+      props.onChoiceSelected?.('')
+      return
     }
+
+    const choice = getRandom(filteredChoices)
     let title: string = choice.name
     let reason: string = choice.reason
 
@@ -106,7 +122,7 @@ const Widget = (props: IWidget) => {
 
     setChoices(title)
     setReasons(reason)
-  }, [getChoices])
+  }, [getChoices, props.filters, props.onChoiceSelected, t])
 
   React.useEffect(() => {
     updateReasons()

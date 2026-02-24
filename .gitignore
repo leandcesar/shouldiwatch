@@ -13,3 +13,4 @@ public/bundle.js
 .vercel
 .idea
 coverage/
+build/
