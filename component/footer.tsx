@@ -15,28 +15,23 @@ interface IFooter {
 
 const Footer = (props: IFooter) => {
   const { t } = useTranslation();
-
   return (
     <>
       <ul className="footer-list">
-
         <li>
           {t("footer.theme")}{" "}
           <button onClick={props.toggleTheme} className="theme-toggle" title={"Click to toggle light/dark"}>
             {props.theme}
           </button>
         </li>
-
         <li>
           {t("footer.timezone")}{" "}
           <Timezone onChange={props.changeTimezone} timezone={props.timezone} />
         </li>
-
         <li>
           {t("footer.filter")}{" "}
           <Filter onChange={props.changeFilterPreset} value={props.filterPreset} />
         </li>
-
         <li>
           {t("footer.open_titles_on")}{" "}
           <LinkSiteFilter
@@ -44,10 +39,8 @@ const Footer = (props: IFooter) => {
             value={props.preferredLinkSite}
           />
         </li>
-
       </ul>
       <ul className="footer-list">
-
         <li>
           <a
             href="https://x.com/intent/tweet?source=https%3A%2F%2Fonthisday.watch%2F&text=What%20should%20I%20watch%20today%3F:%20https%3A%2F%2Fonthisday.watch"
@@ -58,7 +51,6 @@ const Footer = (props: IFooter) => {
             {t("footer.share")}
           </a>
         </li>
-
         <li>
           <a
             href="http://github.com/leandcesar/onthisday.watch"
@@ -69,7 +61,6 @@ const Footer = (props: IFooter) => {
             {t("footer.source")}
           </a>
         </li>
-
       </ul>
     </>
   );

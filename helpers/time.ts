@@ -5,12 +5,11 @@ export default class Time {
 
   constructor(timezone: string | null = null, customDate?: string) {
     this.timezone = timezone || Intl.DateTimeFormat().resolvedOptions().timeZone
-    this.customDate = new Date(customDate + 'T00:00:00Z')
+
     if (customDate) {
       const utcDate = new Date(customDate + 'T00:00:00Z')
       const offset = utcDate.getTimezoneOffset() * 60 * 1000
-      const adjustedDate = new Date(utcDate.getTime() + offset)
-      this.customDate = adjustedDate
+      this.customDate = new Date(utcDate.getTime() + offset)
     } else {
       this.customDate = null
     }
@@ -29,89 +28,57 @@ export default class Time {
     }
   }
 
-  getDate(): Date {
-    if (this.customDate) {
-      return this.customDate
-    }
+  private getTimezoneDate(): Date {
     const timeZoneDate = new Date().toLocaleString('en-US', {
       timeZone: this.timezone
     })
     return new Date(timeZoneDate)
   }
 
-  formatMonthDay(): string {
-    const month = String(this.getDate().getMonth() + 1).padStart(2, "0");
-    const day = String(this.getDate().getDate()).padStart(2, "0");
-    return `${month}-${day}`;
+  getDate(): Date {
+    if (this.customDate) {
+      return this.customDate
+    }
+    return this.getTimezoneDate()
   }
 
-  /**
-   * Check if a timezone exist
-   * @param {string} timeZone
-   * @return {bool}
-   */
+  formatMonthDay(): string {
+    const date = this.getDate()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${month}-${day}`
+  }
+
   static zoneExists(timeZone: string): boolean {
     try {
       Intl.DateTimeFormat('en-US', { timeZone }).format(Date.now())
       return true
-    } catch (error) {
-      if (error instanceof RangeError) {
-        return false
-      }
+    } catch {
       return false
     }
   }
 
   static validOrNull(timezone: string | null) {
-    if (!timezone) {
-      timezone = Time.DEFAULT_TIMEZONE
-    }
-
-    return this.zoneExists(timezone) ? new Time(timezone) : null
+    const resolvedTimezone = timezone || Time.DEFAULT_TIMEZONE
+    return this.zoneExists(resolvedTimezone) ? new Time(resolvedTimezone) : null
   }
 
-  /**
-   * Return current date
-   * @return {Date}
-   */
   now(): Date {
-    if (this.customDate) {
-      return this.customDate
-    }
-    const timeZoneDate = new Date().toLocaleString('en-US', {
-      timeZone: this.timezone
-    })
-    return new Date(timeZoneDate)
+    return this.getDate()
   }
 
-  /**
-   * Today is Friday
-   * @return boolean
-   */
   isFriday(): boolean {
     return this.getDate().getDay() === 5
   }
 
-  /**
-   * Today is day 13
-   * @return boolean
-   */
   is13th(): boolean {
     return this.getDate().getDate() === 13
   }
 
-  /**
-   * Are we Friday the 13th?
-   * @return boolean
-   */
   isFriday13th(): boolean {
     return this.isFriday() && this.is13th()
   }
 
-  /**
-   * Is it Christmas eve?
-   * @returns boolean
-   */
   isDayBeforeChristmas(): boolean {
     return (
       this.getDate().getMonth() === 11 &&
@@ -120,18 +87,10 @@ export default class Time {
     )
   }
 
-  /**
-   * Is it Christmas?
-   * @returns boolean
-   */
   isChristmas(): boolean {
     return this.getDate().getMonth() === 11 && this.getDate().getDate() === 25
   }
 
-  /**
-   * Is it New Years eve or New Year?
-   * @returns boolean
-   */
   isNewYear(): boolean {
     return (
       (this.now().getMonth() === 11 &&
@@ -141,10 +100,6 @@ export default class Time {
     )
   }
 
-  /**
-   * Combine if holidays
-   * @returns boolean
-   */
   isHolidays(): boolean {
     return this.isDayBeforeChristmas() || this.isChristmas() || this.isNewYear()
   }

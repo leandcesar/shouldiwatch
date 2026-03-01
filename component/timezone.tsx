@@ -10,7 +10,6 @@ const Timezone = (props: ITimezone) => {
   const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     props.onChange(event.target.value)
   }
-
   const options = () => {
     return names.map((name, index) => {
       return (
@@ -20,7 +19,6 @@ const Timezone = (props: ITimezone) => {
       )
     })
   }
-
   return (
     <select value={props.timezone} onChange={onChange}>
       {options()}

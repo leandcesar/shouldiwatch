@@ -1,14 +1,14 @@
 import React, { createContext, useState, useContext, useEffect } from 'react'
 import en from '../locales/en.json'
-// import pt from '../locales/pt.json'
 
 type LocaleData = typeof en
 type Language = string
 
 const locales: Record<string, LocaleData> = {
   en,
-  // pt
 }
+const DEFAULT_LANGUAGE = 'en'
+const AVAILABLE_LANGUAGES = Object.keys(locales)
 
 interface LanguageContextType {
   language: Language
@@ -21,30 +21,25 @@ const LanguageContext = createContext<LanguageContextType | undefined>(
   undefined
 )
 
-/**
- * Find the best matching language from available locales
- * Supports regional codes (e.g., 'es-AR') with fallback to base language (e.g., 'es')
- */
-function findBestMatchingLanguage(lang: string): string {
-  // 1. Try exact match (e.g., 'es-AR')
+function findBestMatchingLanguage(lang: Language): Language {
   if (locales[lang]) {
     return lang
   }
-
-  // 2. Try base language (e.g., 'es' from 'es-AR')
   const baseLang = lang.split('-')[0]
   if (locales[baseLang]) {
     return baseLang
   }
+  return DEFAULT_LANGUAGE
+}
 
-  // 3. Fallback to English
-  return 'en'
+function getLocaleData(lang: Language): LocaleData {
+  return locales[findBestMatchingLanguage(lang)]
 }
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
   children
 }) => {
-  const [language, setLanguage] = useState<Language>('en')
+  const [language, setLanguage] = useState<Language>(DEFAULT_LANGUAGE)
 
   useEffect(() => {
     const savedLang = localStorage.getItem('language')
@@ -61,26 +56,9 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem('language', lang)
   }
 
-  const getLocaleData = (lang: string): LocaleData => {
-    // 1. Try exact match (e.g., 'es-MX')
-    if (locales[lang]) {
-      return locales[lang]
-    }
-
-    // 2. Try base language (e.g., 'es' from 'es-MX')
-    const baseLang = lang.split('-')[0]
-    if (locales[baseLang]) {
-      return locales[baseLang]
-    }
-
-    // 3. Fallback to 'en'
-    return locales['en']
-  }
-
   const t = (key: string) => {
     const keys = key.split('.')
     let value: any = getLocaleData(language)
-
     for (const k of keys) {
       if (value && typeof value === 'object' && value[k] !== undefined) {
         value = value[k]
@@ -97,7 +75,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({
         language,
         setLanguage: changeLanguage,
         t,
-        availableLanguages: Object.keys(locales)
+        availableLanguages: AVAILABLE_LANGUAGES
       }}
     >
       {children}

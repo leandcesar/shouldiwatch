@@ -1,54 +1,66 @@
-import React from "react";
-import { useTranslation } from "../helpers/i18n";
+import React from 'react'
+import { useTranslation } from '../helpers/i18n'
 
 export type ContentTypeFilter =
-  | "all"
-  | "only_movies"
-  | "only_tv"
-  | "only_people";
-export type PreferredLinkSite = "imdb" | "tmdb" | "letterboxd";
+  | 'all'
+  | 'only_movies'
+  | 'only_tv'
+  | 'only_people'
+export type PreferredLinkSite = 'imdb' | 'tmdb' | 'letterboxd'
 
 interface IFilter {
-  value: ContentTypeFilter;
-  onChange: (value: ContentTypeFilter) => void;
+  value: ContentTypeFilter
+  onChange: (value: ContentTypeFilter) => void
 }
 
-const Filter = (props: IFilter) => {
-  const { t } = useTranslation();
+const contentTypeOptions: Array<{ value: ContentTypeFilter; labelKey: string }> = [
+  { value: 'all', labelKey: 'footer.filter_all' },
+  { value: 'only_movies', labelKey: 'footer.filter_only_movies' },
+  { value: 'only_tv', labelKey: 'footer.filter_only_tv' },
+  { value: 'only_people', labelKey: 'footer.filter_only_people' }
+]
 
-  const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    props.onChange(event.target.value as ContentTypeFilter);
-  };
+const linkSiteOptions: Array<{ value: PreferredLinkSite; labelKey: string }> = [
+  { value: 'imdb', labelKey: 'footer.imdb' },
+  { value: 'tmdb', labelKey: 'footer.tmdb' },
+  { value: 'letterboxd', labelKey: 'footer.letterboxd' }
+]
 
+const Filter = ({ value, onChange }: IFilter) => {
+  const { t } = useTranslation()
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    onChange(event.target.value as ContentTypeFilter)
+  }
   return (
-    <select value={props.value} onChange={onChange}>
-      <option value="all">{t("footer.filter_all")}</option>
-      <option value="only_movies">{t("footer.filter_only_movies")}</option>
-      <option value="only_tv">{t("footer.filter_only_tv")}</option>
-      <option value="only_people">{t("footer.filter_only_people")}</option>
+    <select value={value} onChange={handleChange}>
+      {contentTypeOptions.map((option) => (
+        <option key={option.value} value={option.value}>
+          {t(option.labelKey)}
+        </option>
+      ))}
     </select>
-  );
-};
+  )
+}
 
-export default Filter;
+export default Filter
 
 interface ILinkSiteFilter {
-  value: PreferredLinkSite;
-  onChange: (value: PreferredLinkSite) => void;
+  value: PreferredLinkSite
+  onChange: (value: PreferredLinkSite) => void
 }
 
-export const LinkSiteFilter = (props: ILinkSiteFilter) => {
-  const { t } = useTranslation();
-
-  const onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    props.onChange(event.target.value as PreferredLinkSite);
-  };
-
+export const LinkSiteFilter = ({ value, onChange }: ILinkSiteFilter) => {
+  const { t } = useTranslation()
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    onChange(event.target.value as PreferredLinkSite)
+  }
   return (
-    <select value={props.value} onChange={onChange}>
-      <option value="imdb">{t("footer.imdb")}</option>
-      <option value="tmdb">{t("footer.tmdb")}</option>
-      <option value="letterboxd">{t("footer.letterboxd")}</option>
+    <select value={value} onChange={handleChange}>
+      {linkSiteOptions.map((option) => (
+        <option key={option.value} value={option.value}>
+          {t(option.labelKey)}
+        </option>
+      ))}
     </select>
-  );
-};
+  )
+}

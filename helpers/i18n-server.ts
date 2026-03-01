@@ -1,74 +1,47 @@
 import en from '../locales/en.json'
-// import pt from '../locales/pt.json'
 
 type LocaleData = typeof en
+type Language = string
 
 const locales: Record<string, LocaleData> = {
-  en,
-  // pt
+  en
 }
+const DEFAULT_LANGUAGE = 'en'
 
-/**
- * Get locale data with fallback support
- * Supports regional codes (e.g., 'es-AR') with fallback to base language (e.g., 'es')
- * @param lang - language code
- * @returns LocaleData
- */
-function getLocaleData(lang: string): LocaleData {
-  // 1. Try exact match (e.g., 'es-AR')
+function getLocaleData(lang: Language): LocaleData {
   if (locales[lang]) {
     return locales[lang]
   }
-
-  // 2. Try base language (e.g., 'es' from 'es-AR')
   const baseLang = lang.split('-')[0]
   if (locales[baseLang]) {
     return locales[baseLang]
   }
-
-  // 3. Fallback to English
   return locales.en
 }
 
-/**
- * Server-side translation function
- * @param key - dot-notation key
- * @param lang - language code (defaults to 'en'). Supports regional codes like 'es-AR'
- * @returns translated value or falls back to base language or English
- */
-export function translate(key: string, lang?: string): any {
-  const language = lang || 'en'
-
+function getValueByKeyPath(source: any, key: string) {
   const keys = key.split('.')
-  let value: any = getLocaleData(language)
-
-  for (const k of keys) {
-    if (value && typeof value === 'object' && value[k] !== undefined) {
-      value = value[k]
+  let value = source
+  for (const part of keys) {
+    if (value && typeof value === 'object' && value[part] !== undefined) {
+      value = value[part]
     } else {
-      // Fallback to English if translation not found
-      let fallbackValue: any = locales.en
-      for (const fk of keys) {
-        if (
-          fallbackValue &&
-          typeof fallbackValue === 'object' &&
-          fallbackValue[fk] !== undefined
-        ) {
-          fallbackValue = fallbackValue[fk]
-        } else {
-          return key
-        }
-      }
-      return fallbackValue
+      return undefined
     }
   }
-
   return value
 }
 
-/**
- * Get reasons array by type with translation support
- */
+export function translate(key: string, lang?: string): any {
+  const language = lang || DEFAULT_LANGUAGE
+  const translatedValue = getValueByKeyPath(getLocaleData(language), key)
+  if (translatedValue !== undefined) {
+    return translatedValue
+  }
+  const fallbackValue = getValueByKeyPath(locales.en, key)
+  return fallbackValue !== undefined ? fallbackValue : key
+}
+
 export function getTranslatedReasons(
   reasonType: string,
   lang?: string
